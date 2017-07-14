@@ -47,6 +47,13 @@ class ArticalList extends React.Component {
 		});
 	}
 
+	componentWillReceiveProps(nextProps) {
+		ArticleService.loadArticle(nextProps.articleCondition.subject, nextProps.articleCondition.page).then(articlesData => {
+			const more = articlesData.pageMax > nextProps.page;
+			this.setState({ articles: articlesData.data, more });
+		});
+	}
+
 	render() {
 
 		return (
