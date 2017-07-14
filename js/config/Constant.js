@@ -1,4 +1,3 @@
-
 export const SUBJECTS =  {
 	index: {
 		display: '首页',
@@ -29,3 +28,23 @@ export const SUBJECTS =  {
 		value: 9
 	}
 };
+
+
+
+const u148UrlPrefix = 'http://api.u148.net';
+export const getSearchArticleUrl = (subject = 'index', page = 1) => {
+	return `${u148UrlPrefix}/json/${SUBJECTS[subject].value}/${page}`;
+};
+
+export const getSubjectByValue = (value) => {
+	for(const subject in SUBJECTS) {
+		const detail = SUBJECTS[subject];
+		if(detail.value === value) {
+			return {
+				subject,
+				...detail
+			};
+		}
+	}
+	return {...SUBJECTS['chandlery'], subject: 'chandlery'};
+}

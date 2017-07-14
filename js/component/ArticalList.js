@@ -1,32 +1,33 @@
 import React from 'react';
 import ReactNative from 'react-native';
 import { connect } from 'react-redux';
-import axios from 'axios';
-import Img from './img/image.jpg';
+import ArticleService from '../service/ArticleService';
+import  { getSubjectByValue } from '../config/Constant';
 
 
 let { ScrollView, View, StyleSheet, Image, Text } = ReactNative;
 
 class ArticleView extends React.PureComponent {
 	render() {
+		const article = this.props.article;
 		return (
 			<View style={styles.container}>
 				<View style={styles.imageContainer}>
 					<Image
 						style={styles.image}
-						source={Img}
+						source={{url: article.pic_mid}}
 					/>
 				</View>
 				<View style={styles.articleContainer}>
 					<View style={styles.describeRow}>
 						<Text numberOfLines={1} style={styles.textSubject}>
-							<Text style={styles.articleType}>[图画]</Text>我已认真阅读并同意该用户协议女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了
+							<Text style={styles.articleType}>[{getSubjectByValue(article.category).display}]</Text>{article.title}
 						</Text>
 					</View>
 
 					<View style={styles.describeRow}>
 						<Text numberOfLines={2} style={styles.textDescribe}>
-							女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了女孩子如果说“没事”，那就是生气了
+							{article.summary}
 						</Text>
 					</View>
 				</View>
@@ -40,58 +41,25 @@ class ArticalList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { articles: [] };
-		axios.get('http://api.u148.net/json/6/1').then(data => {
-			console.log(data);
-		}).catch(e => {
-			console.log(e);
-		})
+		ArticleService.loadArticle(props.subject, props.page).then(articlesData => {
+			const more = articlesData.pageMax > props.page;
+			this.setState({ articles: articlesData.data, more });
+		});
 	}
 
 	render() {
+
 		return (
 			<ScrollView>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
-				<View style={styles.articleView}>
-					<ArticleView />
-				</View>
+				{
+					this.state.articles.map(article => {
+						return (
+							<View key={article.id*1000 + article.uid} style={styles.articleView}>
+								<ArticleView article={article} />
+							</View>
+						);
+					})
+				}
 			</ScrollView>
 		);
 	}
@@ -123,7 +91,7 @@ const styles = StyleSheet.create({
 	},
 	describeRow: {
 		flexDirection: 'row',
-		marginTop: 10,
+		marginTop: 6,
 	},
 	textSubject: {
 		fontSize: 14
@@ -132,7 +100,7 @@ const styles = StyleSheet.create({
 		fontSize: 12
 	},
 	articleView: {
-		marginTop: 5
+		marginTop: 2
 	}
 });
 
