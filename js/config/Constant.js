@@ -29,8 +29,6 @@ export const SUBJECTS =  {
 	}
 };
 
-
-
 const u148UrlPrefix = 'http://api.u148.net';
 export const getSearchArticleUrl = (subject = 'index', page = 1) => {
 	return `${u148UrlPrefix}/json/${SUBJECTS[subject].value}/${page}`;
