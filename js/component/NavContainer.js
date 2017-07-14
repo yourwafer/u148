@@ -3,6 +3,7 @@ import ReactNative from 'react-native';
 import { connect } from 'react-redux';
 import { SUBJECTS } from '../config/Constant';
 import Icon from './img/icon.png';
+import { SearchArticleAction } from '../redux/reducer/searchArtical';
 
 let { View, Text, StyleSheet, Image } = ReactNative;
 
@@ -10,7 +11,7 @@ class NavHeader extends React.Component {
 
 	subjectSelect = (subject) => {
 		return () => {
-
+			this.props.select(subject);
 		};
 	};
 
@@ -19,7 +20,8 @@ class NavHeader extends React.Component {
 		for (const subject in SUBJECTS) {
 			const item = SUBJECTS[subject];
 			items.push((
-				<View key={subject} style={subject==activeSubject?[styles.activeItem, styles.navItemContainer]:[styles.navItemContainer]}>
+				<View key={subject}
+				      style={subject==activeSubject?[styles.activeItem, styles.navItemContainer]:[styles.navItemContainer]}>
 					<Text style={[styles.navItem]} onPress={this.subjectSelect(subject)}>{item.display}</Text>
 				</View>
 			));
@@ -41,7 +43,7 @@ class NavContainer extends React.Component {
 		return (
 			<View style={styles.container}>
 				<CircleIcon />
-				<NavHeader active={this.props.articleCondition.subject} />
+				<NavHeader active={this.props.articleCondition.subject} select={this.props.SearchArticleAction} />
 			</View>
 		);
 	}
@@ -107,4 +109,4 @@ const stateMapper = (state) => {
 	}
 };
 
-export default connect(stateMapper)(NavContainer);
+export default connect(stateMapper, { SearchArticleAction })(NavContainer);
