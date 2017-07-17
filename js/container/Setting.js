@@ -1,28 +1,108 @@
 import React from 'react';
 import ReactNative from 'react-native';
-import bg from './img/setting.jpg';
+import ic_bg from './img/setting.png';
+import ic_unlogin from './img/ic_avatar.png';
+import ic_setting from './img/ic_settings.png';
+import ic_info from './img/ic_info.png';
+import ic_star from './img/ic_star.png';
 
 const {
-	View, StyleSheet, Image, Text
+	View, StyleSheet, Image, Text, ImageBackground, TouchableOpacity
 } = ReactNative;
 
-class Setting extends React.Component {
+class SettingItem extends React.PureComponent {
 	render() {
 		return (
-			<Image source={bg} style={styles.container}>
-
-			</Image>
+			<TouchableOpacity style={styles.settingRow} activeOpacity={0.7}>
+				<Image style={styles.settingIcon} source={this.props.icon} />
+				<Text style={styles.settingTxt}>{this.props.text}</Text>
+			</TouchableOpacity>
 		);
 	}
 }
 
+class Setting extends React.Component {
+	render() {
+		return (
+			<ImageBackground style={styles.container} source={ic_bg} imageStyle={styles.imgContainer}>
+				<View style={styles.loginContainer}>
+					<Image source={ic_unlogin} style={styles.unlogin} />
+				</View>
+				<View style={styles.loginBtnRow}>
+					<TouchableOpacity style={styles.btnContainer}>
+						<Text style={styles.btnTxt}>登录</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.btnContainer}>
+						<Text style={styles.btnTxt}>注册</Text>
+					</TouchableOpacity>
+				</View>
+				<SettingItem icon={ic_setting} text={'设置'} />
+				<SettingItem icon={ic_star} text={'收藏'} />
+				<SettingItem icon={ic_info} text={'关于'} />
+			</ImageBackground>
+		);
+	}
+}
+//alignItems center not valid,so give a offset
+const offsetLeft = -50;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		width: 330,
-		backgroundColor: 'red'
+		alignItems: 'center'
 	},
-
+	imgContainer: {
+		width: null, height: null
+	},
+	loginContainer: {
+		alignItems: 'center',
+	},
+	unlogin: {
+		width: 50,
+		height: 50,
+		marginLeft: offsetLeft,
+		marginTop: 100,
+		marginBottom: 15
+	},
+	loginBtnRow: {
+		width: 110,
+		alignItems: 'center',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginLeft: offsetLeft,
+		marginBottom: 50
+	},
+	btnContainer: {
+		width: 50,
+		height: 30,
+		backgroundColor: '#d8d8d8',
+		borderRadius: 5,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	btnTxt: {
+		color: '#294551',
+		fontSize: 15
+	},
+	settingRow: {
+		width: 200,
+		height: 45,
+		marginLeft: offsetLeft,
+		marginTop: 15,
+		backgroundColor: 'rgba(180,177,177,0.45)',
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingLeft: 20
+	},
+	settingIcon: {
+		width: 20,
+		height: 20
+	},
+	settingTxt: {
+		color: '#294551',
+		fontSize: 19,
+		marginLeft: 10
+	}
 });
 
 export default Setting;
