@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactNative from 'react-native';
+import { Navigation } from 'react-native-navigation';
 import ic_bg from './img/setting.png';
 import ic_unlogin from './img/ic_avatar.png';
 import ic_setting from './img/ic_settings.png';
@@ -13,7 +14,7 @@ const {
 class SettingItem extends React.PureComponent {
 	render() {
 		return (
-			<TouchableOpacity style={styles.settingRow} activeOpacity={0.7}>
+			<TouchableOpacity style={styles.settingRow} activeOpacity={0.7} onPress={this.props.select}>
 				<Image style={styles.settingIcon} source={this.props.icon} />
 				<Text style={styles.settingTxt}>{this.props.text}</Text>
 			</TouchableOpacity>
@@ -22,6 +23,14 @@ class SettingItem extends React.PureComponent {
 }
 
 class Setting extends React.Component {
+
+	aboutClick = () => {
+		Navigation.showModal({
+			screen: 'u148.About',
+			title: '版权声明'
+		});
+	};
+
 	render() {
 		return (
 			<ImageBackground style={styles.container} source={ic_bg} imageStyle={styles.imgContainer}>
@@ -38,7 +47,7 @@ class Setting extends React.Component {
 				</View>
 				<SettingItem icon={ic_setting} text={'设置'} />
 				<SettingItem icon={ic_star} text={'收藏'} />
-				<SettingItem icon={ic_info} text={'关于'} />
+				<SettingItem icon={ic_info} text={'关于'} select={this.aboutClick} />
 			</ImageBackground>
 		);
 	}
