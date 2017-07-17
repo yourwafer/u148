@@ -3,14 +3,15 @@ import ReactNative from 'react-native';
 let { View, StyleSheet } = ReactNative;
 
 import NavContainer from '../component/NavContainer';
-import ArticalList from '../component/ArticalList';
+import ArticleList from '../component/ArticalList';
 
 class ContentList extends React.Component {
+
 	render() {
 		return (
 			<View style={styles.container}>
 				<NavContainer />
-				<ArticalList />
+				<ArticleList navigator={this.props.navigator} />
 			</View>
 		);
 	}

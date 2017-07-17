@@ -2,49 +2,55 @@ import React from 'react';
 import ReactNative from 'react-native';
 import { connect } from 'react-redux';
 import ArticleService from '../service/ArticleService';
-import  { getSubjectByValue } from '../config/Constant';
+import { getSubjectByValue } from '../config/Constant';
+import { SelectArticleAction } from '../redux/reducer/selectArtical';
 
 
-let { ScrollView, View, StyleSheet, Image, Text } = ReactNative;
+let { ScrollView, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
 
 class ArticleView extends React.PureComponent {
+
+	selectArticle = (articleId) => {
+		return () => {
+			this.props.select(articleId);
+		}
+	};
+
 	render() {
 		const article = this.props.article;
 		return (
-			<View style={styles.container}>
-				<View style={styles.imageContainer}>
-					<Image
-						style={styles.image}
-						source={{url: article.pic_mid}}
-					/>
-				</View>
-				<View style={styles.articleContainer}>
-					<View style={styles.describeRow}>
-						<Text numberOfLines={1} style={styles.textSubject}>
-							<Text style={styles.articleType}>[{getSubjectByValue(article.category).display}]</Text>{article.title}
-						</Text>
+			<TouchableHighlight onPress={this.selectArticle(article)} activeOpacity={.7} underlayColor={'white'}>
+				<View style={styles.container}>
+					<View style={styles.imageContainer}>
+						<Image
+							style={styles.image}
+							source={{url: article.pic_mid}}
+						/>
 					</View>
+					<View style={styles.articleContainer}>
+						<View style={styles.describeRow}>
+							<Text numberOfLines={1} style={styles.textSubject}>
+								<Text style={styles.articleType}>[{getSubjectByValue(article.category).display}]</Text>{article.title}
+							</Text>
+						</View>
 
-					<View style={styles.describeRow}>
-						<Text numberOfLines={2} style={styles.textDescribe}>
-							{article.summary}
-						</Text>
+						<View style={styles.describeRow}>
+							<Text numberOfLines={2} style={styles.textDescribe}>
+								{article.summary}
+							</Text>
+						</View>
 					</View>
 				</View>
-			</View>
+			</TouchableHighlight>
 		);
 	}
 }
 
-class ArticalList extends React.Component {
+class ArticleList extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = { articles: [] };
-		ArticleService.loadArticle(props.subject, props.page).then(articlesData => {
-			const more = articlesData.pageMax > props.page;
-			this.setState({ articles: articlesData.data, more });
-		});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -54,6 +60,26 @@ class ArticalList extends React.Component {
 		});
 	}
 
+	componentDidMount() {
+		ArticleService.loadArticle(this.props.subject, this.props.page).then(articlesData => {
+			const more = articlesData.pageMax > this.props.page;
+			if (this.unmount !== true) {
+				this.setState({ articles: articlesData.data, more });
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		this.unmount = true;
+	}
+
+	articleSelect = (article) => {
+		this.props.SelectArticleAction(article);
+		this.props.navigator.push({
+			screen: 'u148.ArticleDetail'
+		});
+	};
+
 	render() {
 
 		return (
@@ -62,7 +88,7 @@ class ArticalList extends React.Component {
 					this.state.articles.map(article => {
 						return (
 							<View key={article.id*1000 + article.uid} style={styles.articleView}>
-								<ArticleView article={article} />
+								<ArticleView article={article} select={this.articleSelect} />
 							</View>
 						);
 					})
@@ -117,4 +143,4 @@ const stateMapper = (state) => {
 	}
 };
 
-export default connect(stateMapper)(ArticalList);
+export default connect(stateMapper, { SelectArticleAction })(ArticleList);
