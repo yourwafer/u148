@@ -11,5 +11,10 @@ Navigation.startSingleScreenApp({
 		navigatorStyle: {
 			navBarHidden: true
 		}
+	},
+	drawer: {
+		left: {
+			screen: 'u148.Setting'
+		}
 	}
 });

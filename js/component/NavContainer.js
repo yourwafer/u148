@@ -5,7 +5,7 @@ import { SUBJECTS } from '../config/Constant';
 import Icon from './img/icon.png';
 import { SearchArticleAction } from '../redux/reducer/searchArtical';
 
-let { View, Text, StyleSheet, Image } = ReactNative;
+let { View, Text, StyleSheet, Image, TouchableHighlight } = ReactNative;
 
 class NavHeader extends React.Component {
 
@@ -39,10 +39,18 @@ class NavHeader extends React.Component {
 }
 
 class NavContainer extends React.Component {
+
+	startSetting = () => {
+		this.props.navigator.toggleDrawer({
+			side: 'left',
+			animated: true
+		});
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
-				<CircleIcon />
+				<CircleIcon setting={this.startSetting} />
 				<NavHeader active={this.props.articleCondition.subject} select={this.props.SearchArticleAction} />
 			</View>
 		);
@@ -52,9 +60,11 @@ class NavContainer extends React.Component {
 class CircleIcon extends React.PureComponent {
 	render() {
 		return (
-			<View style={[styles.iconContainer,styles.alignCenter]}>
-				<Image style={styles.icon} source={Icon} />
-			</View>
+			<TouchableHighlight onPress={()=>{this.props.setting&&this.props.setting()}} activeOpacity={.8} underlayColor={'white'}>
+				<View style={[styles.iconContainer,styles.alignCenter]}>
+					<Image style={styles.icon} source={Icon} />
+				</View>
+			</TouchableHighlight>
 		);
 	}
 }

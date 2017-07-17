@@ -10,7 +10,7 @@ class ContentList extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<NavContainer />
+				<NavContainer navigator={this.props.navigator} />
 				<ArticleList navigator={this.props.navigator} />
 			</View>
 		);
