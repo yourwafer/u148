@@ -30,6 +30,15 @@ class Setting extends React.Component {
 			title: '版权声明'
 		});
 	};
+	loginClick = () => {
+		Navigation.showLightBox({
+			screen: 'u148.Login',
+			style: {
+				backgroundColor: "rgba(0,0,0,0.5)",
+				tapBackgroundToDismiss: true
+			}
+		});
+	};
 
 	render() {
 		return (
@@ -38,7 +47,7 @@ class Setting extends React.Component {
 					<Image source={ic_unlogin} style={styles.unlogin} />
 				</View>
 				<View style={styles.loginBtnRow}>
-					<TouchableOpacity style={styles.btnContainer}>
+					<TouchableOpacity style={styles.btnContainer} onPress={this.loginClick}>
 						<Text style={styles.btnTxt}>登录</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.btnContainer}>
