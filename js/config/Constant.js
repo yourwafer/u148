@@ -48,4 +48,6 @@ export const getSubjectByValue = (value) => {
 		}
 	}
 	return {...SUBJECTS['chandlery'], subject: 'chandlery'};
-}
+};
+
+export const loginUrl = `${u148UrlPrefix}/json/login`;

@@ -1,12 +1,36 @@
 import React from 'react';
 import ReactNative from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
+import { LoginAction } from '../redux/reducer/login';
+import loginService from '../service/UserService';
 
 const {
 	View, Text, Button, StyleSheet, TextInput, PixelRatio, TouchableOpacity
 } = ReactNative;
 
 class LoginModal extends React.PureComponent {
+
+	constructor(props) {
+		super(props);
+		this.state = { err: false };
+	}
+
+	loginClick = () => {
+		if(this.email == undefined || this.password==undefined || this.email=='' || this.password==''){
+			this.setState({ err: true });
+			return;
+		}
+		loginService.login(this.email, this.password).then(response => {
+			if (response.code === 0) {
+				this.props.LoginAction(response.data);
+				Navigation.dismissLightBox();
+			} else {
+				this.setState({ err: true });
+			}
+		});
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -14,24 +38,30 @@ class LoginModal extends React.PureComponent {
 				<View style={styles.inputRow}>
 					<TextInput
 						style={styles.inputText}
-						placeholder={'邮箱'} keyboardType={'email-address'} placeholderTextColor={'rgba(41,69,81,52)'} selectTextOnFocus={true}
+						placeholder={'邮箱'} keyboardType={'email-address'} placeholderTextColor={'rgba(41,69,81,52)'}
+						selectTextOnFocus={true}
+						autoFocus={true}
+						ref={(c)=>{this.emailInput=c;}}
+						onChangeText={(value=>this.email=value)}
 					/>
-					<View style={styles.inputBorder} />
+					<View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
 				</View>
 				<View style={styles.inputRow}>
 					<TextInput
 						style={styles.inputText}
-						placeholder={'密码'} placeholderTextColor={'rgba(41,69,81,52)'} secureTextEntry={true}
+						placeholder={'密码'} placeholderTextColor={'rgba(41,69,81,52)'}
+						secureTextEntry={true}
+						ref={(c)=>{this.passwordInput=c;}}
+						onChangeText={(value=>this.password=value)}
 					/>
-					<View style={styles.inputBorder} />
+					<View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
 				</View>
 				<View style={styles.btnRow}>
 					<TouchableOpacity style={[styles.actionBtn]}>
-						<Text style={styles.actionBtnTxt}>取消</Text>
+						<Text style={styles.actionBtnTxt}>Cancel</Text>
 					</TouchableOpacity>
-					<View style={styles.btnSep} />
-					<TouchableOpacity style={styles.actionBtn}>
-						<Text style={styles.actionBtnTxt}>确定</Text>
+					<TouchableOpacity style={styles.actionBtn} onPress={this.loginClick}>
+						<Text style={styles.actionBtnTxt}>Login In</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -66,32 +96,34 @@ const styles = StyleSheet.create({
 		width: 235,
 		height: 6,
 		borderBottomWidth: 2,
-		borderBottomColor: 'black',
 		borderRightWidth: 1,
-		borderRightColor: 'black',
 		borderLeftWidth: 1,
-		borderLeftColor: 'black',
+		borderColor: 'black',
 		marginTop: -8
+	},
+	inputError: {
+		borderColor: 'red'
 	},
 	btnRow: {
 		marginTop: 40,
-		borderTopWidth: 1/PixelRatio.get(),
-		borderBottomWidth: 1/PixelRatio.get(),
 		alignSelf: 'stretch',
 		flexDirection: 'row',
-	},
-	btnSep: {
-		borderRightWidth: 1/PixelRatio.get()
+		justifyContent: 'space-around',
 	},
 	actionBtn: {
-		flex: 1,
+		width: 80,
+		height: 40,
 		alignItems: 'center',
 		justifyContent: 'center',
-		height: 60
+		backgroundColor: 'rgba(216,216,216,0.36)',
+		borderRadius: 5
 	},
 	actionBtnTxt: {
-		fontSize: 19
+		fontSize: 17,
+		color: '#294551'
 	}
 });
 
-export default LoginModal;
+export default connect((state) => {
+	return state;
+}, { LoginAction })(LoginModal);

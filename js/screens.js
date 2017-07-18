@@ -10,5 +10,5 @@ export default function (store, Provider) {
 	Navigation.registerComponent('u148.ArticleDetail', () => ArticleDetail, store, Provider);
 	Navigation.registerComponent('u148.Setting', () => Setting, store, Provider);
 	Navigation.registerComponent('u148.About', () => AboutModal);
-	Navigation.registerComponent('u148.Login', () => LoginModal);
+	Navigation.registerComponent('u148.Login', () => LoginModal, store, Provider);
 }
