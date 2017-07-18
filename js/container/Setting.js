@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactNative from 'react-native';
 import { Navigation } from 'react-native-navigation';
+import { connect } from 'react-redux';
 import ic_bg from './img/setting.png';
 import ic_unlogin from './img/ic_avatar.png';
 import ic_setting from './img/ic_settings.png';
@@ -41,19 +42,46 @@ class Setting extends React.Component {
 	};
 
 	render() {
+		const userInfo = this.props.userInfo;
+		const UserIcon = () => {
+			if(userInfo.nickname !== undefined){
+				return (
+					<Image source={{url: userInfo.icon}} style={styles.loginIcon} />
+				);
+			}else{
+				return (
+					<Image source={ic_unlogin} style={styles.loginIcon} />
+				);
+			}
+		};
+
+		const userName = () => {
+			if(userInfo.nickname !== undefined){
+				return (
+					<View style={[styles.loginBtnRow, styles.userNameRow]}>
+						<Text style={styles.nameTxt}>{userInfo.nickname}</Text>
+					</View>
+				);
+			}else{
+				return (
+					<View style={styles.loginBtnRow}>
+						<TouchableOpacity style={styles.btnContainer} onPress={this.loginClick}>
+							<Text style={styles.btnTxt}>登录</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={styles.btnContainer}>
+							<Text style={styles.btnTxt}>注册</Text>
+						</TouchableOpacity>
+					</View>
+				);
+			}
+		}
+
 		return (
 			<ImageBackground style={styles.container} source={ic_bg} imageStyle={styles.imgContainer}>
 				<View style={styles.loginContainer}>
-					<Image source={ic_unlogin} style={styles.unlogin} />
+					{UserIcon()}
 				</View>
-				<View style={styles.loginBtnRow}>
-					<TouchableOpacity style={styles.btnContainer} onPress={this.loginClick}>
-						<Text style={styles.btnTxt}>登录</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.btnContainer}>
-						<Text style={styles.btnTxt}>注册</Text>
-					</TouchableOpacity>
-				</View>
+				{userName()}
 				<SettingItem icon={ic_setting} text={'设置'} />
 				<SettingItem icon={ic_star} text={'收藏'} />
 				<SettingItem icon={ic_info} text={'关于'} select={this.aboutClick} />
@@ -75,20 +103,29 @@ const styles = StyleSheet.create({
 	loginContainer: {
 		alignItems: 'center',
 	},
-	unlogin: {
+	loginIcon: {
 		width: 50,
 		height: 50,
 		marginLeft: offsetLeft,
 		marginTop: 100,
-		marginBottom: 15
+		marginBottom: 15,
+		borderRadius: 25
 	},
 	loginBtnRow: {
 		width: 110,
+		height: 50,
 		alignItems: 'center',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		marginLeft: offsetLeft,
-		marginBottom: 50
+	},
+	userNameRow: {
+		alignItems: 'flex-start',
+		justifyContent: 'center',
+		backgroundColor: 'transparent'
+	},
+	nameTxt: {
+		color: '#294551'
 	},
 	btnContainer: {
 		width: 50,
@@ -123,4 +160,9 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default Setting;
+const mapState = (state)=>{
+	return {
+		userInfo: state.userInfo
+	};
+};
+export default connect(mapState)(Setting);
