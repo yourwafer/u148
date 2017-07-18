@@ -31,6 +31,10 @@ class LoginModal extends React.PureComponent {
 		});
 	};
 
+	cancelClick=()=>{
+		Navigation.dismissLightBox();
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -57,7 +61,7 @@ class LoginModal extends React.PureComponent {
 					<View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
 				</View>
 				<View style={styles.btnRow}>
-					<TouchableOpacity style={[styles.actionBtn]}>
+					<TouchableOpacity style={[styles.actionBtn]} onPress={this.cancelClick}>
 						<Text style={styles.actionBtnTxt}>Cancel</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.actionBtn} onPress={this.loginClick}>
