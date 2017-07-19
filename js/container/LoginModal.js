@@ -6,7 +6,7 @@ import { LoginAction } from '../redux/reducer/login';
 import loginService from '../service/UserService';
 
 const {
-	View, Text, Button, StyleSheet, TextInput, PixelRatio, TouchableOpacity
+	View, Text, Button, StyleSheet, TextInput, PixelRatio, TouchableOpacity, Platform
 } = ReactNative;
 
 class LoginModal extends React.PureComponent {
@@ -36,6 +36,10 @@ class LoginModal extends React.PureComponent {
 	};
 
 	render() {
+		let inputBorder = <View />;
+		if(Platform.OS.toLocaleLowerCase() == 'ios'){
+			inputBorder = <View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
+		}
 		return (
 			<View style={styles.container}>
 				<Text style={styles.title}>登录</Text>
@@ -48,7 +52,7 @@ class LoginModal extends React.PureComponent {
 						ref={(c)=>{this.emailInput=c;}}
 						onChangeText={(value=>this.email=value)}
 					/>
-					<View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
+					{inputBorder}
 				</View>
 				<View style={styles.inputRow}>
 					<TextInput
@@ -58,7 +62,7 @@ class LoginModal extends React.PureComponent {
 						ref={(c)=>{this.passwordInput=c;}}
 						onChangeText={(value=>this.password=value)}
 					/>
-					<View style={[styles.inputBorder, this.state.err?styles.inputError: {}]} />
+					{inputBorder}
 				</View>
 				<View style={styles.btnRow}>
 					<TouchableOpacity style={[styles.actionBtn]} onPress={this.cancelClick}>
