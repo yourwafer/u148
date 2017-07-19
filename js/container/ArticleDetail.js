@@ -5,13 +5,13 @@ import moment from 'moment';
 import ArticleService from '../service/ArticleService';
 import template from '../resources/html_tpl';
 
-const { WebView, StyleSheet } = ReactNative;
+const { WebView, StyleSheet, Platform, View } = ReactNative;
 
 class ArticleDetail extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { content: this.buildContentWithHtml() };
+		this.state = { content: this.buildContentWithHtml('loading...') };
 		ArticleService.loadArticleDetail(props.article.id).then(content => {
 			this.setState({ content: this.buildContentWithHtml(content) });
 		});
@@ -27,14 +27,37 @@ class ArticleDetail extends React.Component {
 	}
 
 	render() {
-		return (
-			<WebView
-				style={styles.webView}
-				source={{html: this.state.content}}
-				scalesPageToFit={true}
-				dataDetectorTypes={'none'}
-			/>
-		);
+		if (Platform.OS.toLocaleLowerCase() === 'ios') {
+			return (
+				<WebView
+					style={styles.webView}
+					source={{html: this.state.content}}
+					scalesPageToFit={true}
+				/>
+			);
+		} else {
+			if (this.even) {
+				this.even = false;
+				return (
+					<View style={styles.webView}>
+						<WebView
+							style={styles.webView}
+							source={{html: this.state.content}}
+							scalesPageToFit={true}
+						/>
+					</View>
+				);
+			} else {
+				this.even = true;
+				return (
+					<WebView
+						style={styles.webView}
+						source={{html: this.state.content}}
+						scalesPageToFit={true}
+					/>
+				);
+			}
+		}
 	}
 }
 
