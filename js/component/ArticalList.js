@@ -8,7 +8,7 @@ import { SelectArticleAction } from '../redux/reducer/selectArtical';
 
 let { ScrollView, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
 
-class ArticleView extends React.PureComponent {
+class ArticleView extends React.Component {
 
 	selectArticle = (articleId) => {
 		return () => {
@@ -24,7 +24,7 @@ class ArticleView extends React.PureComponent {
 					<View style={styles.imageContainer}>
 						<Image
 							style={styles.image}
-							source={{url: article.pic_mid}}
+							source={{uri: article.pic_mid}}
 						/>
 					</View>
 					<View style={styles.articleContainer}>

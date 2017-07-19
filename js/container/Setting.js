@@ -9,7 +9,7 @@ import ic_info from './img/ic_info.png';
 import ic_star from './img/ic_star.png';
 
 const {
-	View, StyleSheet, Image, Text, ImageBackground, TouchableOpacity
+	View, StyleSheet, Image, Text, TouchableOpacity
 } = ReactNative;
 
 class SettingItem extends React.PureComponent {
@@ -19,6 +19,32 @@ class SettingItem extends React.PureComponent {
 				<Image style={styles.settingIcon} source={this.props.icon} />
 				<Text style={styles.settingTxt}>{this.props.text}</Text>
 			</TouchableOpacity>
+		);
+	}
+}
+
+class ImageBackground extends React.Component {
+	render() {
+		const {children, style, imageStyle, imageRef, ...props} = this.props;
+
+		return (
+			<View style={style}>
+				<Image
+					{...props}
+					style={[
+            {
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+            },
+            imageStyle,
+          ]}
+					ref={imageRef}
+				/>
+				{children}
+			</View>
 		);
 	}
 }
@@ -46,7 +72,7 @@ class Setting extends React.Component {
 		const UserIcon = () => {
 			if(userInfo.nickname !== undefined){
 				return (
-					<Image source={{url: userInfo.icon}} style={styles.loginIcon} />
+					<Image source={{uri: userInfo.icon}} style={styles.loginIcon} />
 				);
 			}else{
 				return (
