@@ -11,10 +11,14 @@ class ArticleDetail extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { content: this.buildContentWithHtml('loading...') };
+		this.state = { content: this.buildContentWithHtml('') };
 		ArticleService.loadArticleDetail(props.article.id).then(content => {
 			this.setState({ content: this.buildContentWithHtml(content) });
 		});
+	}
+
+	componentDidUpdate(prevProps, prevState){
+		this.webView.reload();
 	}
 
 	buildContentWithHtml = (content) => {
@@ -27,37 +31,14 @@ class ArticleDetail extends React.Component {
 	}
 
 	render() {
-		if (Platform.OS.toLocaleLowerCase() === 'ios') {
-			return (
-				<WebView
-					style={styles.webView}
-					source={{html: this.state.content}}
-					scalesPageToFit={true}
-				/>
-			);
-		} else {
-			if (this.even) {
-				this.even = false;
-				return (
-					<View style={styles.webView}>
-						<WebView
-							style={styles.webView}
-							source={{html: this.state.content}}
-							scalesPageToFit={true}
-						/>
-					</View>
-				);
-			} else {
-				this.even = true;
-				return (
-					<WebView
-						style={styles.webView}
-						source={{html: this.state.content}}
-						scalesPageToFit={true}
-					/>
-				);
-			}
-		}
+		return (
+			<WebView
+				ref = {(e) => {this.webView = e;}}
+				style={styles.webView}
+				source={{html: this.state.content}}
+				scalesPageToFit={true}
+			/>
+		);
 	}
 }
 
