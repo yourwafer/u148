@@ -9,12 +9,12 @@ const {
 class AboutModal extends React.PureComponent {
 	render() {
 		return (
-			<View>
+			<View style={styles.view}>
 				<Text style={styles.txt}>
 					解释权归作者所有，所有接口使用www.u148.net提供的API，仅做个人学习使用，如果违反有意思吧的使用权，请联系yourwafer@gmail.com，本人会尽快修改.
 				</Text>
 				<View style={styles.btn}>
-					<Button color={'white'} title='关闭' onPress={()=>{
+					<Button title='关闭' onPress={()=>{
 					Navigation.dismissModal({
             animationType: 'slide-down'
 					});}} />
@@ -25,6 +25,10 @@ class AboutModal extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+	view: {
+		flex: 1,
+		backgroundColor: 'white',
+	},
 	btn: {
 		backgroundColor: '#00bccd',
 		width: 100,
