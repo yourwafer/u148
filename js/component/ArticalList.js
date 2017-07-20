@@ -50,27 +50,15 @@ class ArticleList extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { articles: [] , page: 1};
-	}
-
-	componentWillReceiveProps(nextProps) {
-		ArticleService.loadArticle(nextProps.articleCondition.subject, this.state.page).then(articlesData => {
-			const more = articlesData.pageMax > nextProps.page;
-			this.setState({ articles: articlesData.data, more });
-		});
+		this.state = { articles: [], page: 1 };
 	}
 
 	componentDidMount() {
-		ArticleService.loadArticle().then(articlesData => {
-			const more = articlesData.pageMax > this.props.page;
-			if (this.unmount !== true) {
-				this.setState({ articles: articlesData.data, more });
-			}
-		});
+		this._refresh();
 	}
 
-	componentWillUnmount() {
-		this.unmount = true;
+	componentWillReceiveProps(nextProps) {
+		this._refresh(1, nextProps.articleCondition.subject);
 	}
 
 	articleSelect = (article) => {
@@ -89,6 +77,12 @@ class ArticleList extends React.Component {
 		);
 	};
 
+	_refresh = (page = this.state.page, subject = this.props.articleCondition.subject) => {
+		ArticleService.loadArticle(subject, page).then(articlesData => {
+			this.setState({ articles: articlesData.data, page: articlesData.pageNo });
+		});
+	};
+
 	render() {
 
 		return (
@@ -96,8 +90,9 @@ class ArticleList extends React.Component {
 				data={this.state.articles}
 				extraData={this.state}
 				keyExtractor={(article)=>article.id}
-				renderItem = {this._renderItem}
-
+				renderItem={this._renderItem}
+				onRefresh={()=>{this._refresh()}}
+				refreshing={false}
 			/>
 		);
 	}
