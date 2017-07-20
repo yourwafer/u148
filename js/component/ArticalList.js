@@ -5,6 +5,9 @@ import ArticleService from '../service/ArticleService';
 import { getSubjectByValue } from '../config/Constant';
 import { SelectArticleAction } from '../redux/reducer/selectArtical';
 
+import ic_loading from './img/loading.gif';
+import ic_complete from './img/complete.png';
+
 
 let { FlatList, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
 
@@ -79,8 +82,35 @@ class ArticleList extends React.Component {
 
 	_refresh = (page = this.state.page, subject = this.props.articleCondition.subject) => {
 		ArticleService.loadArticle(subject, page).then(articlesData => {
-			this.setState({ articles: articlesData.data, page: articlesData.pageNo });
+			const end = articlesData.pageNo >= articlesData.pageMax;
+			if (articlesData.pageNo !== 1) {
+				this.setState({ articles: [...this.state.articles, ...articlesData.data], page: articlesData.pageNo, end });
+			} else {
+				this.setState({ articles: articlesData.data, page: articlesData.pageNo, end });
+			}
 		});
+	};
+
+	_end_next_page = () => {
+		this._refresh(this.state.page + 1);
+	};
+
+	_footerComponent = () => {
+		if (this.state.end) {
+			return (
+				<View style={styles.loadingView}>
+					<Text>没啦，去看看别的吧</Text>
+					<Image style={styles.complete} source={ic_complete}/>
+				</View>
+			);
+		}else{
+			return (
+				<View style={styles.loadingView}>
+					<Text>客官稍候，马上就来...</Text>
+					<Image style={styles.loading} source={ic_loading}/>
+				</View>
+			);
+		}
 	};
 
 	render() {
@@ -91,8 +121,11 @@ class ArticleList extends React.Component {
 				extraData={this.state}
 				keyExtractor={(article)=>article.id}
 				renderItem={this._renderItem}
-				onRefresh={()=>{this._refresh()}}
+				onRefresh={()=>{this._refresh(1)}}
 				refreshing={false}
+				onEndReached={this._end_next_page}
+				onEndReachedThreshold={0.1}
+				ListFooterComponent={this._footerComponent}
 			/>
 		);
 	}
@@ -134,6 +167,19 @@ const styles = StyleSheet.create({
 	},
 	articleView: {
 		marginTop: 2
+	},
+	loadingView: {
+		flexDirection: 'row',
+		paddingLeft: 50,
+		alignItems: 'baseline'
+	},
+	loading: {
+		width: 50,
+		height: 50
+	},
+	complete: {
+		width: 100,
+		height: 100
 	}
 });
 
