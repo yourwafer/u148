@@ -18,7 +18,11 @@ class ArticleDetail extends React.Component {
 	}
 
 	componentDidUpdate(prevProps, prevState){
-		this.webView.reload();
+		if(Platform.OS.toLocaleLowerCase() === 'android'){
+			requestAnimationFrame(() => {
+				this.webView.reload();
+			});
+		}
 	}
 
 	buildContentWithHtml = (content) => {
