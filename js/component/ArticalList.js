@@ -50,18 +50,18 @@ class ArticleList extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { articles: [] };
+		this.state = { articles: [] , page: 1};
 	}
 
 	componentWillReceiveProps(nextProps) {
-		ArticleService.loadArticle(nextProps.articleCondition.subject, nextProps.articleCondition.page).then(articlesData => {
+		ArticleService.loadArticle(nextProps.articleCondition.subject, this.state.page).then(articlesData => {
 			const more = articlesData.pageMax > nextProps.page;
 			this.setState({ articles: articlesData.data, more });
 		});
 	}
 
 	componentDidMount() {
-		ArticleService.loadArticle(this.props.subject, this.props.page).then(articlesData => {
+		ArticleService.loadArticle().then(articlesData => {
 			const more = articlesData.pageMax > this.props.page;
 			if (this.unmount !== true) {
 				this.setState({ articles: articlesData.data, more });
