@@ -6,7 +6,7 @@ import { getSubjectByValue } from '../config/Constant';
 import { SelectArticleAction } from '../redux/reducer/selectArtical';
 
 
-let { ScrollView, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
+let { FlatList, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
 
 class ArticleView extends React.Component {
 
@@ -80,20 +80,25 @@ class ArticleList extends React.Component {
 		});
 	};
 
+	_renderItem = ({ item }) => {
+		const article = item;
+		return (
+			<View key={article.id*1000 + article.uid} style={styles.articleView}>
+				<ArticleView article={article} select={this.articleSelect} />
+			</View>
+		);
+	};
+
 	render() {
 
 		return (
-			<ScrollView>
-				{
-					this.state.articles.map(article => {
-						return (
-							<View key={article.id*1000 + article.uid} style={styles.articleView}>
-								<ArticleView article={article} select={this.articleSelect} />
-							</View>
-						);
-					})
-				}
-			</ScrollView>
+			<FlatList
+				data={this.state.articles}
+				extraData={this.state}
+				keyExtractor={(article)=>article.id}
+				renderItem = {this._renderItem}
+
+			/>
 		);
 	}
 }
