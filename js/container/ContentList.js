@@ -20,7 +20,8 @@ class ContentList extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		flexDirection: 'column'
+		flexDirection: 'column',
+		backgroundColor: '#FFF'
 	}
 });
 
