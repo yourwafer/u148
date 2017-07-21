@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactNative from 'react-native';
-import { connect } from 'react-redux';
 import { SUBJECTS } from '../config/Constant';
 import Icon from './img/icon.png';
-import { SearchArticleAction } from '../redux/reducer/searchArtical';
 
 let { View, Text, StyleSheet, Image, TouchableHighlight } = ReactNative;
 
@@ -39,19 +37,11 @@ class NavHeader extends React.Component {
 }
 
 class NavContainer extends React.Component {
-
-	startSetting = () => {
-		this.props.navigator.toggleDrawer({
-			side: 'left',
-			animated: true
-		});
-	};
-
 	render() {
 		return (
 			<View style={styles.container}>
-				<CircleIcon setting={this.startSetting} />
-				<NavHeader active={this.props.articleCondition.subject} select={this.props.SearchArticleAction} />
+				<CircleIcon setting={this.props.startSetting} />
+				<NavHeader active={this.props.subject} select={this.props.select} />
 			</View>
 		);
 	}
@@ -113,10 +103,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-const stateMapper = (state) => {
-	return {
-		articleCondition: state.articleCondition
-	}
-};
-
-export default connect(stateMapper, { SearchArticleAction })(NavContainer);
+export default NavContainer;

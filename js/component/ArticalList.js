@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import ArticleService from '../service/ArticleService';
 import { getSubjectByValue } from '../config/Constant';
 import { SelectArticleAction } from '../redux/reducer/selectArtical';
-
 import ic_loading from './img/loading.gif';
 import ic_complete from './img/complete.png';
 
@@ -61,7 +60,7 @@ class ArticleList extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this._refresh(1, nextProps.articleCondition.subject);
+		this._refresh(1, nextProps.subject);
 	}
 
 	articleSelect = (article) => {
@@ -74,17 +73,28 @@ class ArticleList extends React.Component {
 	_renderItem = ({ item }) => {
 		const article = item;
 		return (
-			<View key={article.id*1000 + article.uid} style={styles.articleView}>
+			<View style={styles.articleView}>
 				<ArticleView article={article} select={this.articleSelect} />
 			</View>
 		);
 	};
 
-	_refresh = (page = this.state.page, subject = this.props.articleCondition.subject) => {
+	addToSet = (ori, data) => {
+		const ids = ori.map((item) => item.id);
+		data.forEach(item => {
+			if(ids.indexOf(item.id) < 0){
+				ori.push(item);
+			}
+		});
+		return ori;
+	};
+
+	_refresh = (page = this.state.page, subject = this.props.subject) => {
 		ArticleService.loadArticle(subject, page).then(articlesData => {
 			const end = articlesData.pageNo >= articlesData.pageMax;
 			if (articlesData.pageNo !== 1) {
-				this.setState({ articles: [...this.state.articles, ...articlesData.data], page: articlesData.pageNo, end });
+
+				this.setState({ articles: this.addToSet([...this.state.articles], articlesData.data), page: articlesData.pageNo, end });
 			} else {
 				this.setState({ articles: articlesData.data, page: articlesData.pageNo, end });
 			}
@@ -100,14 +110,14 @@ class ArticleList extends React.Component {
 			return (
 				<View style={styles.loadingView}>
 					<Text>没啦，去看看别的吧</Text>
-					<Image style={styles.complete} source={ic_complete}/>
+					<Image style={styles.complete} source={ic_complete} />
 				</View>
 			);
-		}else{
+		} else {
 			return (
 				<View style={styles.loadingView}>
 					<Text>客官稍候，马上就来...</Text>
-					<Image style={styles.loading} source={ic_loading}/>
+					<Image style={styles.loading} source={ic_loading} />
 				</View>
 			);
 		}
@@ -119,12 +129,12 @@ class ArticleList extends React.Component {
 			<FlatList
 				data={this.state.articles}
 				extraData={this.state}
-				keyExtractor={(article)=>article.id}
+				keyExtractor={(article)=>{return article.id;}}
 				renderItem={this._renderItem}
 				onRefresh={()=>{this._refresh(1)}}
 				refreshing={false}
 				onEndReached={this._end_next_page}
-				onEndReachedThreshold={0.1}
+				onEndReachedThreshold={0.2}
 				ListFooterComponent={this._footerComponent}
 			/>
 		);
@@ -182,11 +192,9 @@ const styles = StyleSheet.create({
 		height: 100
 	}
 });
-
+const def = {};
 const stateMapper = (state) => {
-	return {
-		articleCondition: state.articleCondition
-	}
+	return def;
 };
 
 export default connect(stateMapper, { SelectArticleAction })(ArticleList);
