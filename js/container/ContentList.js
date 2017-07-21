@@ -65,7 +65,6 @@ class ContentList extends React.Component {
 				<Swiper
 					ref={e=>{this.swiper=e;}}
 					loadMinimal={true}
-					loadMinimalSize={2}
 					loop={false}
 					onMomentumScrollEnd = {(e, state, context) => {
 						this.scrollTab(state.index);
