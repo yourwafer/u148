@@ -10,7 +10,7 @@ import ic_complete from './img/complete.png';
 
 let { FlatList, View, StyleSheet, Image, Text, TouchableHighlight } = ReactNative;
 
-class ArticleView extends React.Component {
+class ArticleView extends React.PureComponent {
 
 	selectArticle = (articleId) => {
 		return () => {
@@ -48,20 +48,23 @@ class ArticleView extends React.Component {
 	}
 }
 
-class ArticleList extends React.Component {
+class ArticleList extends React.PureComponent {
 
 	constructor(props) {
 		super(props);
 		this.state = { articles: [], page: 1 };
+		requestAnimationFrame(() => {
+			this._refresh();
+		});
 	}
 
-	componentDidMount() {
-		this._refresh();
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this._refresh(1, nextProps.subject);
-	}
+	// componentDidMount() {
+	// 	this._refresh();
+	// }
+	//
+	// componentWillReceiveProps(nextProps) {
+	// 	this._refresh(1, nextProps.subject);
+	// }
 
 	articleSelect = (article) => {
 		this.props.SelectArticleAction(article);
@@ -134,7 +137,8 @@ class ArticleList extends React.Component {
 				onRefresh={()=>{this._refresh(1)}}
 				refreshing={false}
 				onEndReached={this._end_next_page}
-				onEndReachedThreshold={0.2}
+				onEndReachedThreshold={0.1}
+				initialNumToRender={7}
 				ListFooterComponent={this._footerComponent}
 			/>
 		);

@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactNative from 'react-native';
 import Swiper from 'react-native-swiper';
-import { connect } from 'react-redux';
 import NavContainer from '../component/NavContainer';
 import ArticleList from '../component/ArticalList';
 import { SUBJECTS } from '../config/Constant';
@@ -10,8 +9,7 @@ let { View, StyleSheet, Text } = ReactNative;
 
 class ContentList extends React.Component {
 
-	state = {subject: 'index'};
-
+	state = { subject: 'index', index: 0 };
 	startSetting = () => {
 		this.props.navigator.toggleDrawer({
 			side: 'left',
@@ -27,22 +25,22 @@ class ContentList extends React.Component {
 			if (name == subject) {
 				selectIndex = index;
 			}
-			if(name == this.state.subject) {
+			if (name == this.state.subject) {
 				preIndex = index;
 			}
 			index += 1;
 		}
 		requestAnimationFrame(() => {
-			this.swiper.scrollBy(selectIndex - preIndex);
+			this.refs['swiper'].scrollBy(selectIndex - preIndex, true);
 		});
-		this.setState({ subject });
+		this.setState({ subject, index: selectIndex });
 	};
 
 	scrollTab = (select) => {
 		let index = 0;
 		for (const name in SUBJECTS) {
-			if(index === select) {
-				this.setState({ subject: name });
+			if (index === select) {
+				this.setState({ subject: name, index: select });
 				return;
 			}
 			index += 1;
@@ -63,10 +61,10 @@ class ContentList extends React.Component {
 			<View style={styles.container}>
 				<NavContainer startSetting={this.startSetting} subject={this.state.subject} select={this.select} />
 				<Swiper
-					ref={e=>{this.swiper=e;}}
-					loadMinimal={true}
+					ref={'swiper'}
 					loop={false}
-					onMomentumScrollEnd = {(e, state, context) => {
+					index={this.state.index}
+					onMomentumScrollEnd={(e, state, context) => {
 						this.scrollTab(state.index);
 					}}
 				>

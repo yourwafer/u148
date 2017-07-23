@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { getSearchArticleUrl, getArticleDetailUrl } from '../config/Constant';
-
+let total = 0;
+const increaseAndPrint = (count) => {
+	total += count;
+	console.log("total-》" + total);
+}
 const loadArticle = (subject, page) => {
 	const searchUrl = getSearchArticleUrl(subject, page);
 	return axios.get(searchUrl).then(response => {
@@ -9,6 +13,7 @@ const loadArticle = (subject, page) => {
 		}
 		return Promise.reject(response);
 	}).then(articles => {
+		increaseAndPrint(articles.data.data.length)
 		return articles.data;
 	}).catch(e => {
 		console.log(e);
