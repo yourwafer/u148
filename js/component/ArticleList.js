@@ -96,16 +96,18 @@ class ArticleList extends React.PureComponent {
 		ArticleService.loadArticle(subject, page).then(articlesData => {
 			const end = articlesData.pageNo >= articlesData.pageMax;
 			if (articlesData.pageNo !== 1) {
-
 				this.setState({ articles: this.addToSet([...this.state.articles], articlesData.data), page: articlesData.pageNo, end });
 			} else {
+				this.firstRender = true;
 				this.setState({ articles: articlesData.data, page: articlesData.pageNo, end });
 			}
 		});
 	};
 
 	_end_next_page = () => {
-		this._refresh(this.state.page + 1);
+		if(this.firstRender){
+			this._refresh(this.state.page + 1);
+		}
 	};
 
 	_footerComponent = () => {

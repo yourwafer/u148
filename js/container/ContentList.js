@@ -2,12 +2,12 @@ import React from 'react';
 import ReactNative from 'react-native';
 import Swiper from 'react-native-swiper';
 import NavContainer from '../component/NavContainer';
-import ArticleList from '../component/ArticalList';
+import ArticleList from '../component/ArticleList';
 import { SUBJECTS } from '../config/Constant';
 
 let { View, StyleSheet, Text } = ReactNative;
 
-class ContentList extends React.Component {
+class ContentList extends React.PureComponent {
 
 	state = { subject: 'index', index: 0 };
 	startSetting = () => {
