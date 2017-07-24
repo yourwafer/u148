@@ -3,7 +3,7 @@ import ReactNative from 'react-native';
 import { SUBJECTS } from '../config/Constant';
 import Icon from './img/icon.png';
 
-let { View, Text, StyleSheet, Image, TouchableHighlight } = ReactNative;
+let { View, Text, StyleSheet, Image, TouchableHighlight, Platform } = ReactNative;
 
 class NavHeader extends React.Component {
 
@@ -50,7 +50,8 @@ class NavContainer extends React.Component {
 class CircleIcon extends React.PureComponent {
 	render() {
 		return (
-			<TouchableHighlight onPress={()=>{this.props.setting&&this.props.setting()}} activeOpacity={.8} underlayColor={'white'}>
+			<TouchableHighlight onPress={()=>{this.props.setting&&this.props.setting()}} activeOpacity={.8}
+			                    underlayColor={'white'}>
 				<View style={[styles.iconContainer,styles.alignCenter]}>
 					<Image style={styles.icon} source={Icon} />
 				</View>
@@ -67,7 +68,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingLeft: 5,
 		paddingRight: 5,
-		paddingTop: 15
+		paddingTop: 15,
+		...Platform.select({
+			android: {
+				height: 50,
+				paddingTop: 0
+			}
+		})
 	},
 	nav: {
 		flex: 1,
