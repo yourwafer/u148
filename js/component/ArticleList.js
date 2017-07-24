@@ -128,6 +128,10 @@ class ArticleList extends React.PureComponent {
 		}
 	};
 
+	_itemLayout = (data, index) => (
+		{length: 90, offset: 90 * index, index}
+	);
+
 	render() {
 
 		return (
@@ -142,6 +146,7 @@ class ArticleList extends React.PureComponent {
 				onEndReachedThreshold={0.1}
 				initialNumToRender={7}
 				ListFooterComponent={this._footerComponent}
+				getItemLayout={this._itemLayout}
 			/>
 		);
 	}
